@@ -1,0 +1,4 @@
+proxima
+=======
+
+No red dwarf.
