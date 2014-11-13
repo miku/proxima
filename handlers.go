@@ -54,7 +54,7 @@ func URLHandler(options Options) http.Handler {
 // SameAsHandler returns the reference to VIAF and DBP for a given GND
 func SameAsHandler(options Options) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		gnd := r.URL.Path[len("/gnd/sa/"):]
+		gnd := r.URL.Path[len("/g/s/"):]
 		url := fmt.Sprintf("http://%s/u?url=http://d-nb.info/gnd/%s/about/rdf", r.Host, gnd)
 		body, resp, err := Fetch(url)
 		if err != nil || resp.StatusCode >= 400 {
@@ -88,16 +88,63 @@ func SameAsHandler(options Options) http.Handler {
 		for key := range set {
 			links = append(links, key)
 		}
-		result := make(map[string]interface{})
-		result["uri"] = fmt.Sprintf("http://d-nb.info/gnd/%s", gnd)
-		result["sa"] = links
-		b, err := json.Marshal(result)
+		// result := make(map[string]interface{})
+		// result["uri"] = fmt.Sprintf("http://d-nb.info/gnd/%s", gnd)
+		// result["sa"] = links
+		b, err := json.Marshal(links)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte(http.StatusText(http.StatusInternalServerError)))
 			return
 		}
 		w.Write(b)
+	}
+	return http.HandlerFunc(fn)
+
+}
+
+// SameAsHandler returns the reference to VIAF and DBP for a given GND
+func GndImageHandler(options Options) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		gnd := r.URL.Path[len("/g/i/"):]
+		url := fmt.Sprintf("http://%s/g/s/%s", r.Host, gnd)
+		body, resp, err := Fetch(url)
+		if err != nil || resp.StatusCode >= 400 {
+			w.WriteHeader(resp.StatusCode)
+			w.Write([]byte(resp.Status))
+			return
+		}
+
+		var sa []string
+		err = json.Unmarshal(body, &sa)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(http.StatusText(http.StatusInternalServerError)))
+			return
+		}
+
+		for _, uri := range sa {
+			log.Println(uri)
+			if strings.HasPrefix(uri, "http://dbpedia.org/resource/") {
+				data := strings.Replace(uri, "resource", "data", 1)
+				body, resp, err := Fetch(fmt.Sprintf("http://%s/u?url=%s.json", r.Host, data))
+				if err != nil || resp.StatusCode >= 400 {
+					log.Println(err)
+					w.WriteHeader(resp.StatusCode)
+					w.Write([]byte(resp.Status))
+					return
+				}
+				resource := make(map[string]interface{})
+				err = json.Unmarshal(body, &resource)
+				if err != nil {
+					log.Println(err)
+					w.WriteHeader(http.StatusInternalServerError)
+					w.Write([]byte(http.StatusText(http.StatusInternalServerError)))
+					return
+				}
+				w.Write([]byte(fmt.Sprintf("%s", resource[uri])))
+			}
+		}
 	}
 	return http.HandlerFunc(fn)
 

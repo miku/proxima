@@ -28,10 +28,11 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.Handle("/u", proxima.URLHandler(options))
-	mux.Handle("/gnd/sa/", proxima.SameAsHandler(options))
+	mux.Handle("/g/s/", proxima.SameAsHandler(options))
+	mux.Handle("/g/i/", proxima.GndImageHandler(options))
 
-	mux.HandleFunc("/gnd/rdf/", func(w http.ResponseWriter, r *http.Request) {
-		gnd := r.URL.Path[len("/gnd/rdf/"):]
+	mux.HandleFunc("/g/r/", func(w http.ResponseWriter, r *http.Request) {
+		gnd := r.URL.Path[len("/g/r/"):]
 		url := fmt.Sprintf("http://d-nb.info/gnd/%s/about/rdf", gnd)
 		http.Redirect(w, r, fmt.Sprintf("/u?url=%s", url), 303)
 	})
