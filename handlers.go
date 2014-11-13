@@ -99,7 +99,7 @@ func SameAsHandler(options Options) http.Handler {
 
 }
 
-// SameAsHandler returns the reference to VIAF and DBP for a given GND
+// GndImageHandler returns a depiction for a GND
 func GndImageHandler(options Options) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		gnd := r.URL.Path[len("/g/i/"):]
