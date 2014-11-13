@@ -88,9 +88,6 @@ func SameAsHandler(options Options) http.Handler {
 		for key := range set {
 			links = append(links, key)
 		}
-		// result := make(map[string]interface{})
-		// result["uri"] = fmt.Sprintf("http://d-nb.info/gnd/%s", gnd)
-		// result["sa"] = links
 		b, err := json.Marshal(links)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
