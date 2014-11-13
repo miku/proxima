@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -121,12 +120,10 @@ func GndImageHandler(options Options) http.Handler {
 		}
 
 		for _, uri := range sa {
-			log.Println(uri)
 			if strings.HasPrefix(uri, "http://dbpedia.org/resource/") {
 				data := strings.Replace(uri, "resource", "data", 1)
 				body, resp, err := Fetch(fmt.Sprintf("http://%s/u?url=%s.json", r.Host, data))
 				if err != nil || resp.StatusCode >= 400 {
-					log.Println(err)
 					w.WriteHeader(resp.StatusCode)
 					w.Write([]byte(resp.Status))
 					return
@@ -134,7 +131,6 @@ func GndImageHandler(options Options) http.Handler {
 				resource := make(map[string]interface{})
 				err = json.Unmarshal(body, &resource)
 				if err != nil {
-					log.Println(err)
 					w.WriteHeader(http.StatusInternalServerError)
 					w.Write([]byte(http.StatusText(http.StatusInternalServerError)))
 					return
