@@ -38,7 +38,7 @@ func URLHandler(options Options) http.Handler {
 			}
 			w.Write(val)
 		case "DELETE":
-			options.Cache.Get(s)
+			options.Cache.Delete(s)
 			w.WriteHeader(http.StatusNoContent)
 			w.Write([]byte(http.StatusText(http.StatusNoContent)))
 			return
