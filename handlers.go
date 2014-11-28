@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -11,6 +12,9 @@ import (
 // UrlHander handles basic caching of URL content
 func URLHandler(options Options) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
+		if options.Verbose {
+			log.Printf("%+v", r)
+		}
 		s := r.FormValue("url")
 		if s == "" {
 			w.WriteHeader(400)

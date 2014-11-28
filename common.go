@@ -14,7 +14,8 @@ const Version = "0.1.2"
 
 // Options are application options passed to all handlers
 type Options struct {
-	Cache httpcache.Cache
+	Cache   httpcache.Cache
+	Verbose bool
 }
 
 // timeTrack logs execution times

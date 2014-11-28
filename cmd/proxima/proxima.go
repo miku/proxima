@@ -26,6 +26,7 @@ func main() {
 	cacheDir := flag.String("dir", filepath.Join(os.TempDir(), "proxima.v1"), "cache directory")
 	version := flag.Bool("v", false, "prints current program version")
 	base := flag.String("base", "/", "URL base")
+	verbose := flag.Bool("verbose", false, "log requests")
 
 	flag.Parse()
 
@@ -34,7 +35,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	options := proxima.Options{Cache: diskcache.New(*cacheDir)}
+	options := proxima.Options{Cache: diskcache.New(*cacheDir), Verbose: *verbose}
 	mux := http.NewServeMux()
 
 	mux.Handle(prepend("/u", *base), proxima.URLHandler(options))
