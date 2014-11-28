@@ -1,6 +1,6 @@
 Summary:    A proxy for solr requests, that will only reveal the number of results.
 Name:       proxima
-Version:    0.1.1
+Version:    0.1.2
 Release:    0
 License:    MIT
 BuildArch:  x86_64
