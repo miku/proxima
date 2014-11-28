@@ -35,8 +35,9 @@ deb: $(TARGETS)
 	cd debian && fakeroot dpkg-deb --build proxima .
 
 # rpm building via vagrant
-SSHCMD = ssh -o StrictHostKeyChecking=no -i vagrant.key vagrant@127.0.0.1 -p 2222
-SCPCMD = scp -o port=2222 -o StrictHostKeyChecking=no -i vagrant.key
+PORT = 2222
+SSHCMD = ssh -o StrictHostKeyChecking=no -i vagrant.key vagrant@127.0.0.1 -p $(PORT)
+SCPCMD = scp -o port=$(PORT) -o StrictHostKeyChecking=no -i vagrant.key
 
 rpm: $(TARGETS)
 	mkdir -p $(HOME)/rpmbuild/{BUILD,SOURCES,SPECS,RPMS}
