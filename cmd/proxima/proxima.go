@@ -37,9 +37,9 @@ func main() {
 	options := proxima.Options{Cache: diskcache.New(*cacheDir)}
 	mux := http.NewServeMux()
 
-	mux.Handle(prependPrefix("/u", *base), proxima.URLHandler(options))
-	mux.Handle(prependPrefix("/g/s/", *base), proxima.SameAsHandler(options))
-	mux.Handle(prependPrefix("/g/i/", *base), proxima.GndImageHandler(options))
+	mux.Handle(prepend("/u", *base), proxima.URLHandler(options))
+	mux.Handle(prepend("/g/s/", *base), proxima.SameAsHandler(options))
+	mux.Handle(prepend("/g/i/", *base), proxima.GndImageHandler(options))
 
 	mux.HandleFunc("/g/r/", func(w http.ResponseWriter, r *http.Request) {
 		gnd := r.URL.Path[len("/g/r/"):]
