@@ -23,3 +23,9 @@ _testmain.go
 *.test
 *.prof
 /proxima
+.vagrant
+vagrant.key
+
+debian/proxima/usr/*
+debian/*.deb
+*.rpm

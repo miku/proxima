@@ -26,7 +26,7 @@ cover:
 	go get -d && go test -v	-coverprofile=coverage.out
 	go tool cover -html=coverage.out
 
-proxima: imports
+proxima:
 	go build cmd/proxima/proxima.go
 
 deb: $(TARGETS)
