@@ -27,8 +27,13 @@ func URLHandler(options Options) http.Handler {
 			if !ok {
 				b, resp, err := Fetch(s)
 				if err != nil || resp.StatusCode >= 400 {
-					w.WriteHeader(resp.StatusCode)
-					w.Write([]byte(resp.Status))
+					if resp != nil {
+						w.WriteHeader(resp.StatusCode)
+						w.Write([]byte(resp.Status))
+					} else {
+						w.WriteHeader(http.StatusBadRequest)
+						w.Write([]byte(http.StatusText(http.StatusBadRequest)))
+					}
 					return
 				}
 				options.Cache.Set(s, b)
